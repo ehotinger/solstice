@@ -9,7 +9,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/Azure/acrbuild"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
 	"github.com/Azure/go-autorest/autorest/azure/cli"
 	"github.com/Azure/go-autorest/autorest/to"
@@ -71,13 +70,13 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 				BuildArguments: nil,
 				IsPushEnabled:  to.BoolPtr(true),
 				Timeout:        to.Int32Ptr(600),
-				Platform: &acrbuild.PlatformProperties{
-					OSType: to.StringPtr("Linux"),
+				Platform: &containerregistry.PlatformProperties{
+					OsType: containerregistry.Linux,
 					// NB: CPU isn't required right now, possibly want to make this configurable
 					// It'll actually default to 2 from the server
 					// CPU:    to.IntPtr(1),
 				},
-				DockerfilePath: to.StringPtr("Dockerfile"),
+				DockerFilePath: to.StringPtr("Dockerfile"),
 				Type:           containerregistry.TypeQuickBuild,
 			}
 
@@ -130,7 +129,8 @@ func getSubscriptionFromProfile() (*cli.Subscription, error) {
 			subscription = &sub
 		}
 	}
-	if subscription.ID == "" {
-		return fmt.Errorf("could not find a default subscription ID from %s", profilePath)
+	if subscription == nil {
+		return nil, fmt.Errorf("could not find a default subscription ID from %s", profilePath)
 	}
+	return subscription, nil
 }
