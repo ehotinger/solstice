@@ -5,17 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
-	"os"
 	"time"
 
-	"github.com/Azure/go-autorest/autorest/azure/auth"
+	"github.com/Azure/azure-sdk-for-go/services/containerregistry/mgmt/2018-02-01-preview/containerregistry"
 	"github.com/Azure/go-autorest/autorest/azure/cli"
 	"github.com/Azure/go-autorest/autorest/to"
-
-	"github.com/Azure/azure-sdk-for-go/services/containerregistry/mgmt/2018-02-01-preview/containerregistry"
-	"github.com/ehotinger/solstice/client"
 	"github.com/spf13/cobra"
+
+	"github.com/ehotinger/solstice/client"
 )
 
 type buildCmd struct {
@@ -43,24 +40,10 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 				return fmt.Errorf("There was an error while grabbing the subscription: %v", err)
 			}
 
-			fmt.Println("Getting client...")
 			c, err := client.GetRegistriesClient(subscription.ID)
 			if err != nil {
-				return fmt.Errorf("Errored while creating client. Err: %v", err)
+				return fmt.Errorf("could not get registry client: %v", err)
 			}
-
-			// Get the authorizer for auth access
-			tokenPath, err := cli.AccessTokensPath()
-			if err != nil {
-				log.Fatal(err)
-			}
-			// dirty hack to get NewAuthorizerFromEnvironment() to read the right file.
-			os.Setenv("AZURE_AUTH_LOCATION", tokenPath)
-			authorizer, err := auth.NewAuthorizerFromFile(c.BaseURI)
-			if err != nil {
-				log.Fatal(err)
-			}
-			c.Authorizer = authorizer
 
 			// TODO: make all this configurable...
 
