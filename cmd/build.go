@@ -46,9 +46,8 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 
 			// TODO: make all this configurable...
 			req := containerregistry.QuickBuildRequest{
-				ImageName: to.StringPtr("example-dockerfile-http"),
-
-				SourceLocation: to.StringPtr("https://github.com/deis/example-dockerfile-http/archive/master.tar.gz"),
+				ImageName:      to.StringPtr("acr-builder"),
+				SourceLocation: to.StringPtr("https://bacongobbler.blob.core.windows.net/bacongobbler/master.tar.gz"),
 				BuildArguments: nil,
 				IsPushEnabled:  to.BoolPtr(true),
 				Timeout:        to.Int32Ptr(600),
