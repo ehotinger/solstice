@@ -73,7 +73,9 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 				Timeout:        to.Int32Ptr(600),
 				Platform: &acrbuild.PlatformProperties{
 					OSType: to.StringPtr("Linux"),
-					CPU:    to.IntPtr(1),
+					// NB: CPU isn't required right now, possibly want to make this configurable
+					// It'll actually default to 2 from the server
+					// CPU:    to.IntPtr(1),
 				},
 				DockerfilePath: to.StringPtr("Dockerfile"),
 				Type:           containerregistry.TypeQuickBuild,
