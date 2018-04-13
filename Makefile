@@ -28,6 +28,8 @@ GOOSARCHES = linux/amd64
 
 all: clean build fmt lint test staticcheck vet ## Runs a clean, build, fmt, lint, test, staticcheck, and vet
 
+cbuild: clean build ## Runs a clean and a build
+
 .PHONY: build
 build: $(NAME) ## Builds a dynamic executable or package
 

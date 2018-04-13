@@ -2,6 +2,36 @@
 
 
 [[projects]]
+  name = "github.com/Azure/azure-sdk-for-go"
+  packages = ["."]
+  revision = "51228ee60b238eaa5a9d53adc82ebd8b321bca4f"
+  version = "v15.1.1"
+
+[[projects]]
+  name = "github.com/Azure/go-autorest"
+  packages = [
+    "autorest",
+    "autorest/adal",
+    "autorest/azure",
+    "autorest/azure/auth",
+    "autorest/date"
+  ]
+  revision = "9ad9326b278af8fa5cc67c30c0ce9a58cc0862b2"
+  version = "v10.6.0"
+
+[[projects]]
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/dimchansky/utfbom"
+  packages = ["."]
+  revision = "6c6132ff69f0f6c088739067407b5d32c52e1d0f"
+
+[[projects]]
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
@@ -19,9 +49,18 @@
   revision = "583c0c0531f06d5278b7d917446061adc344b5cd"
   version = "v1.0.1"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = [
+    "pkcs12",
+    "pkcs12/internal/rc2"
+  ]
+  revision = "d6449816ce06963d9d136eee5a56fca5b0616e7e"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ea1a1d630ce6bdf03ae4fbb7e51438d70a405292d40afa602865dcb198cae597"
+  inputs-digest = "b1ed184234245ee870d8eea140e37fec80ddb92b599e6ef46f64575cbb8350d0"
   solver-name = "gps-cdcl"
   solver-version = 1
