@@ -1,0 +1,5 @@
+# Solstice
+
+## Build:
+
+- `make`
