@@ -58,7 +58,7 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 					// It'll actually default to 2 from the server
 					// CPU: to.Int32Ptr(1),
 				},
-				DockerFilePath: to.StringPtr("Dockerfile"),
+				DockerFilePath: to.StringPtr("example-dockerfile-http-master/Dockerfile"),
 				Type:           containerregistry.TypeQuickBuild,
 			}
 
