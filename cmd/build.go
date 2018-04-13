@@ -79,8 +79,9 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 				},
 				DockerfilePath: to.StringPtr("Dockerfile"),
 				Type:           containerregistry.TypeQuickBuild,
-			},
-				fmt.Println("Creating quick build request...")
+			}
+
+			fmt.Println("Creating quick build request...")
 			bas, ok := req.AsBasicQueueBuildRequest()
 			if !ok {
 				return errors.New("Failed to create quick build request")
