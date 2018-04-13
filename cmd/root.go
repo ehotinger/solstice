@@ -35,6 +35,7 @@ func newRootCmd(args []string) *cobra.Command {
 		newVersionCmd(out),
 		newBuildCmd(out),
 		newListCmd(out),
+		newLogsCmd(out),
 	)
 
 	flags.Parse(args)

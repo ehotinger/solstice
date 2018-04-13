@@ -7,6 +7,7 @@ import (
 	"github.com/ehotinger/solstice/iam"
 )
 
+// GetRegistriesClient returns a client to interact with registry resources.
 func GetRegistriesClient(subID string) (c containerregistry.RegistriesClient, err error) {
 	registriesClient := containerregistry.NewRegistriesClient(subID)
 	auth, err := iam.GetResourceManagementAuthorizer(iam.AuthGrantType())
@@ -18,6 +19,7 @@ func GetRegistriesClient(subID string) (c containerregistry.RegistriesClient, er
 	return registriesClient, nil
 }
 
+// GetBuildsClient returns a client to interact with builds.
 func GetBuildsClient(subID string) (c containerregistry.BuildsClient, err error) {
 	buildsClient := containerregistry.NewBuildsClient(subID)
 	auth, err := iam.GetResourceManagementAuthorizer(iam.AuthGrantType())
