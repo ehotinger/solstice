@@ -17,7 +17,6 @@ import (
 )
 
 type logsCmd struct {
-	subscriptionID    string
 	resourceGroupName string
 	registryName      string
 	buildID           string
@@ -39,7 +38,6 @@ func newLogsCmd(out io.Writer) *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVar(&logsCmd.subscriptionID, "s", "", "The subscription ID to use for auth")
 	f.StringVar(&logsCmd.resourceGroupName, "rg", "", "The resource group to use for auth")
 	f.StringVar(&logsCmd.registryName, "n", "", "The name of the registry")
 	f.StringVar(&logsCmd.buildID, "b", "", "The build id to look for logs")
@@ -51,8 +49,13 @@ func (cmd *logsCmd) run() error {
 	ctx, cancel := context.WithTimeout(context.TODO(), time.Second*60)
 	defer cancel()
 
+	subscription, err := getSubscriptionFromProfile()
+	if err != nil {
+		return fmt.Errorf("There was an error while grabbing the subscription: %v", err)
+	}
+
 	fmt.Println("Getting client...")
-	c, err := client.GetBuildsClient(cmd.subscriptionID)
+	c, err := client.GetBuildsClient(subscription.ID)
 	if err != nil {
 		return fmt.Errorf("Errored while creating client. Err: %v", err)
 	}
