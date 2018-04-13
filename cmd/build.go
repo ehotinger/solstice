@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/services/containerregistry/mgmt/2018-02-01-preview/containerregistry"
+	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure/cli"
 	"github.com/Azure/go-autorest/autorest/to"
-	"github.com/spf13/cobra"
-
 	"github.com/ehotinger/solstice/client"
+	"github.com/spf13/cobra"
 )
 
 type buildCmd struct {
@@ -45,6 +45,32 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 				return fmt.Errorf("could not get registry client: %v", err)
 			}
 
+			// Get the authorizer for auth access
+			tokenPath, err := cli.AccessTokensPath()
+			if err != nil {
+				return fmt.Errorf("There was an error while grabbing the access token path: %v", err)
+			}
+			var authorizer autorest.Authorizer
+			tokens, err := cli.LoadTokens(tokenPath)
+			if err != nil {
+				return fmt.Errorf("There was an error loading the tokens from %s: %v", tokenPath, err)
+			}
+			for _, token := range tokens {
+				adalToken, err := token.ToADALToken()
+				if err != nil {
+					continue
+				}
+				if adalToken.IsExpired() {
+					continue
+				}
+				authorizer = autorest.NewBearerAuthorizer(&adalToken)
+				break
+			}
+			if authorizer == nil {
+				return fmt.Errorf("run `az login` to get started")
+			}
+			c.Authorizer = authorizer
+
 			// TODO: make all this configurable...
 
 			req := containerregistry.QuickBuildRequest{
@@ -57,7 +83,7 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 					OsType: containerregistry.Linux,
 					// NB: CPU isn't required right now, possibly want to make this configurable
 					// It'll actually default to 2 from the server
-					// CPU:    to.IntPtr(1),
+					// CPU: to.Int32Ptr(1),
 				},
 				DockerFilePath: to.StringPtr("Dockerfile"),
 				Type:           containerregistry.TypeQuickBuild,
