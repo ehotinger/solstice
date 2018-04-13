@@ -132,14 +132,10 @@ func getSubscriptionFromProfile() (*cli.Subscription, error) {
 	if err != nil {
 		return nil, err
 	}
-	var subscription *cli.Subscription
 	for _, sub := range profile.Subscriptions {
 		if sub.IsDefault {
-			subscription = &sub
+			return &sub, nil
 		}
 	}
-	if subscription == nil {
-		return nil, fmt.Errorf("could not find a default subscription ID from %s", profilePath)
-	}
-	return subscription, nil
+	return nil, fmt.Errorf("could not find a default subscription ID from %s", profilePath)
 }
