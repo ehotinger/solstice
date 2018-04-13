@@ -1,9 +1,7 @@
 package main
 
-import (
-	"fmt"
-)
+import "github.com/ehotinger/solstice/cmd"
 
 func main() {
-	fmt.Println("Welcome to Solstice...")
+	cmd.Execute()
 }
