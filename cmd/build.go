@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/Azure/azure-sdk-for-go/services/containerregistry/mgmt/2018-02-01-preview/containerregistry"
-	"github.com/Azure/go-autorest/autorest"
 	"github.com/Azure/go-autorest/autorest/azure/cli"
 	"github.com/Azure/go-autorest/autorest/to"
 	"github.com/ehotinger/solstice/client"
@@ -44,32 +43,6 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 			if err != nil {
 				return fmt.Errorf("could not get registry client: %v", err)
 			}
-
-			// Get the authorizer for auth access
-			tokenPath, err := cli.AccessTokensPath()
-			if err != nil {
-				return fmt.Errorf("There was an error while grabbing the access token path: %v", err)
-			}
-			var authorizer autorest.Authorizer
-			tokens, err := cli.LoadTokens(tokenPath)
-			if err != nil {
-				return fmt.Errorf("There was an error loading the tokens from %s: %v", tokenPath, err)
-			}
-			for _, token := range tokens {
-				adalToken, err := token.ToADALToken()
-				if err != nil {
-					continue
-				}
-				if adalToken.IsExpired() {
-					continue
-				}
-				authorizer = autorest.NewBearerAuthorizer(&adalToken)
-				break
-			}
-			if authorizer == nil {
-				return fmt.Errorf("run `az login` to get started")
-			}
-			c.Authorizer = authorizer
 
 			// TODO: make all this configurable...
 
@@ -111,6 +84,8 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 			fin, err := future.Result(c)
 
 			fmt.Printf("Build ID: %s\n", *fin.BuildID)
+			fmt.Printf("Build Properties: %v\n", *fin.BuildProperties)
+			fmt.Printf("Build Type: %s\n", *fin.Type)
 
 			return err
 		},

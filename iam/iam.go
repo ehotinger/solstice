@@ -15,6 +15,7 @@ import (
 	"github.com/Azure/go-autorest/autorest/adal"
 	"github.com/Azure/go-autorest/autorest/azure"
 	"github.com/Azure/go-autorest/autorest/azure/auth"
+	"github.com/Azure/go-autorest/autorest/azure/cli"
 	"github.com/ehotinger/solstice/helpers"
 )
 
@@ -104,8 +105,29 @@ func GetResourceManagementAuthorizer(grantType OAuthGrantType) (a autorest.Autho
 
 	switch grantType {
 	case OAuthGrantTypeServicePrincipal:
-		fmt.Println("Authorizer from env")
-		a, err = auth.NewAuthorizerFromEnvironment()
+		fmt.Println("Authorizer from ~/.azure")
+		tokenPath, err := cli.AccessTokensPath()
+		if err != nil {
+			err = fmt.Errorf("There was an error while grabbing the access token path: %v", err)
+		}
+		tokens, err := cli.LoadTokens(tokenPath)
+		if err != nil {
+			err = fmt.Errorf("There was an error loading the tokens from %s: %v", tokenPath, err)
+		}
+		for _, token := range tokens {
+			adalToken, err := token.ToADALToken()
+			if err != nil {
+				continue
+			}
+			if adalToken.IsExpired() {
+				continue
+			}
+			a = autorest.NewBearerAuthorizer(&adalToken)
+			break
+		}
+		if a == nil {
+			err = fmt.Errorf("run `az login` to get started")
+		}
 	case OAuthGrantTypeDeviceFlow:
 		fmt.Println("Device flow")
 		config := auth.NewDeviceFlowConfig(samplesAppID, tenantID)
