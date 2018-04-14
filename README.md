@@ -4,3 +4,9 @@
 ## Build:
 
 - `make`
+
+## Running:
+
+- `az login`
+
+- `./solstice help` for a list of all the commands.
