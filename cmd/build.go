@@ -45,10 +45,11 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 			}
 
 			// TODO: make all this configurable...
-
 			req := containerregistry.QuickBuildRequest{
-				ImageName:      to.StringPtr("acr-builder"),
-				SourceLocation: to.StringPtr("https://github.com/deis/example-dockerfile-http/archive/master.tar.gz"),
+				ImageName: to.StringPtr("acr-builder"),
+
+				// SourceLocation is only supported as a SAS URL right now. Full git context support is otw.
+				SourceLocation: to.StringPtr("https://ehotinger.blob.core.windows.net/tars/master.tar.gz"),
 				BuildArguments: nil,
 				IsPushEnabled:  to.BoolPtr(true),
 				Timeout:        to.Int32Ptr(600),
@@ -58,7 +59,7 @@ func newBuildCmd(out io.Writer) *cobra.Command {
 					// It'll actually default to 2 from the server
 					// CPU: to.Int32Ptr(1),
 				},
-				DockerFilePath: to.StringPtr("example-dockerfile-http-master/Dockerfile"),
+				DockerFilePath: to.StringPtr("Dockerfile"),
 				Type:           containerregistry.TypeQuickBuild,
 			}
 
